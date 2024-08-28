@@ -19,6 +19,7 @@ public class Main {
             }
             try {
                 Analyzer.analyze(fileContent);
+                Executer.execute(fileContent);
             } catch (Error err) {
                 System.err.println(err.getMessage());
             }
