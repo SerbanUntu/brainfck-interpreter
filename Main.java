@@ -25,7 +25,7 @@ public class Main {
         }
         try {
             Analyzer.analyze(fileContent);
-            Executer.execute(fileContent);
+            Evaluator.evaluate(fileContent);
         } catch (InterpreterError err) {
             System.err.println(err.getFullMessage());
         }

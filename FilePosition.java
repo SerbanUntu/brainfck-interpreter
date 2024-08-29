@@ -6,4 +6,9 @@ public class FilePosition {
         this.line = line;
         this.col = col;
     }
+
+    @Override
+    public String toString() {
+        return "[Line " + this.line + ":" + this.col + "]";
+    }
 }
