@@ -13,7 +13,7 @@ public class Main {
         String fileContent;
         try {
             fileContent = Files.readString(pathToFile);
-        } catch (IOException err) {
+        } catch (IOException _err) {
             System.err.println("The file at path \"" + args[0]
                     + "\" does not exist.\nPlease enter a valid path to a target .bf file.");
             return;
@@ -26,8 +26,8 @@ public class Main {
         try {
             Analyzer.analyze(fileContent);
             Executer.execute(fileContent);
-        } catch (Error err) {
-            System.err.println(err.getMessage());
+        } catch (InterpreterError err) {
+            System.err.println(err.getFullMessage());
         }
     }
 }

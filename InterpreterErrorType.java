@@ -1,0 +1,6 @@
+public enum InterpreterErrorType {
+    OUT_OF_RANGE_LOWER,
+    OUT_OF_RANGE_UPPER,
+    UNEXPECTED_CLOSING_BRACKET,
+    UNCLOSED_BRACKET
+}

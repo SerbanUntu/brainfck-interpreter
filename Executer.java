@@ -1,64 +1,57 @@
 import java.util.Scanner;
 
 public class Executer {
-    final static short MEMORY_CAPACITY = 30_000;
+    public final static short MEMORY_CAPACITY = 30_000;
 
-    public static void execute(String fileContent) throws Error {
-        int currentLine = 1;
-        int currentCol = 1;
-        int index = 0;
-        int positionOfLastOpenBracket = 0;
+    public static void execute(String fileContent) throws InterpreterError {
         byte[] arr = new byte[MEMORY_CAPACITY];
+        int arrIndex = 0;
+        int fileIndexOfLastOpenBracket = 0;
+        FilePosition cursor = new FilePosition(1, 1);
         Scanner scanner = new Scanner(System.in);
         scanner.useDelimiter("");
-        for (int pos = 0; pos < fileContent.length(); pos++) {
-            switch (fileContent.charAt(pos)) {
+        for (int fileIndex = 0; fileIndex < fileContent.length(); fileIndex++) {
+            switch (fileContent.charAt(fileIndex)) {
                 case '\n':
-                    currentLine++;
-                    currentCol = 0;
+                    cursor.line++;
+                    cursor.col = 0;
                     break;
                 case '<':
-                    if (index == 0) {
-                        throw new Error("[Line " + currentLine + ":" + currentCol
-                                + "] Out of range: index -1.\nCan only access memory between locations 0 and "
-                                + (MEMORY_CAPACITY - 1) + ".");
+                    if (arrIndex == 0) {
+                        throw new InterpreterError(cursor, InterpreterErrorType.OUT_OF_RANGE_LOWER);
                     }
-                    index--;
+                    arrIndex--;
                     break;
                 case '>':
-                    index++;
-                    if (index == MEMORY_CAPACITY) {
-                        throw new Error("[Line " + currentLine + ":" + currentCol
-                                + "] Out of range: index " + MEMORY_CAPACITY
-                                + ".\nCan only access memory between locations 0 and "
-                                + (MEMORY_CAPACITY - 1) + ".");
-                    }
+                    arrIndex++;
+                    if (arrIndex == MEMORY_CAPACITY)
+                        throw new InterpreterError(cursor, InterpreterErrorType.OUT_OF_RANGE_UPPER);
                     break;
                 case '+':
-                    arr[index]++;
+                    arr[arrIndex]++;
                     break;
                 case '-':
-                    arr[index]--;
+                    arr[arrIndex]--;
                     break;
                 case '.':
-                    System.out.print((char) arr[index]);
+                    System.out.print((char) arr[arrIndex]);
                     break;
                 case ',':
-                    arr[index] = (byte) ((char) scanner.next().charAt(0));
+                    arr[arrIndex] = (byte) scanner.next().charAt(0);
                     break;
                 case '[':
-                    if (arr[index] == 0)
-                        while (fileContent.charAt(pos) != ']')
-                            pos++;
+                    if (arr[arrIndex] == 0)
+                        while (fileContent.charAt(fileIndex) != ']')
+                            fileIndex++;
                     else
-                        positionOfLastOpenBracket = pos;
+                        fileIndexOfLastOpenBracket = fileIndex;
                     break;
                 case ']':
-                    if (arr[index] != 0)
-                        pos = positionOfLastOpenBracket;
+                    if (arr[arrIndex] != 0)
+                        fileIndex = fileIndexOfLastOpenBracket;
                     break;
             }
-            currentCol++;
+            cursor.col++;
         }
         System.out.print('\n');
         scanner.close();
